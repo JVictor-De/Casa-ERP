@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Monitoria{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'img/Ibmec_logo.png' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Logo IBMEC no canto inferior esquerdo - aparece em TODAS as páginas -->
+    <div class="logo-corner">
+        <img src="{% static 'img/Ibmec_logo.png' %}" alt="Logo IBMEC" title="IBMEC">
+    </div>
+
+    {% block navbar %}
+    {% if user_type %}
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- Logo + título -->
+            <div class="navbar-left">
+                <img src="{% static 'img/Ibmec_logo.png' %}" alt="Logo IBMEC" class="ibmec-logo">
+            </div>
+
+            <!-- Menu principal -->
+            <ul class="navbar-menu">
+                <li><a href="{% url 'home' %}">Home</a></li>
+
+                {% if user_type == 'aluno' %}
+                    <li><a href="{% url 'lista_vagas' %}">Vagas Disponíveis</a></li>
+                {% elif user_type == 'professor' %}
+                    <li><a href="{% url 'painel_coordenador' %}">Gestão Simplificada</a></li>
+                    <li><a href="{% url 'lista_vagas' %}">Vagas</a></li>
+                {% elif user_type == 'coordenador' or user_type == 'casa' %}
+                    <li><a href="{% url 'painel_coordenador' %}">Painel Administrativo</a></li>
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'lista_vagas' %}">Vagas</a></li>
+                {% elif user_type == 'monitor' %}
+                    <li><a href="{% url 'painel_monitor' %}">Painel do Monitor</a></li>
+                    <li><a href="{% url 'lista_vagas' %}">Vagas</a></li>
+                {% endif %}
+
+                {% if user_nome %}
+                    <li class="user-info">{{ user_nome }}</li>
+                {% endif %}
+                <li><a href="{% url 'logout' %}">Sair</a></li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% endblock %}
+
+    <!-- Mensagens do sistema (sucesso, erro, aviso, etc.) -->
+    {% if messages %}
+    <div class="messages-container" style="max-width: 1200px; margin: 1rem auto; padding: 0 1rem;">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" style="animation: slideInDown 0.3s ease-out;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer class="footer">
+        <p>&copy; 2025 Sistema de Monitoria - Todos os direitos reservados a equipe Frello</p>
+    </footer>
+    {% endblock %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

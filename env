@@ -1,0 +1,10 @@
+# Django Settings
+SECRET_KEY=odo2mjh)(8fyiua0p10)v0ab&)a9h%7ct40+mhc*l+&=qz6p9w
+DEBUG=False
+ALLOWED_HOSTS=.onrender.com,.vercel.app,localhost,127.0.0.1
+
+# Database
+DATABASE_URL=postgresql://postgres:ggwtZ6XYy1ksEvjr@db.zkonmdojdbmdptmeeinf.supabase.co:5432/postgres
+
+# Python
+PYTHON_VERSION=3.12.0

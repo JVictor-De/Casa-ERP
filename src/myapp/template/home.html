@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Sistema de Monitoria{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<style>
+    .home-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .hero {
+        background: linear-gradient(135deg, rgba(91, 155, 213, 0.15) 0%, rgba(212, 160, 23, 0.15) 100%);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        padding: 4rem 2rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* cartão de funcionalidade */
+    .feature-card {
+        background-color: var(--bg-card);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--border-color);
+        text-align: center;
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-blue);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .feature-description {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        flex-grow: 1;
+    }
+
+    .feature-card a {
+        align-self: center;
+        margin-top: auto;
+    }
+
+    /* Hero section */
+    .hero {
+        padding: 3rem 2rem;
+        border-radius: var(--border-radius-lg);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .hero.logged-in {
+        background-color: #1e3a5f;
+        color: white;
+    }
+
+    .hero.logged-in h1 {
+        color: white;
+        font-size: 2.5rem;
+    }
+
+    .hero.logged-in p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+    }
+
+    .cta-section {
+        background-color: #1e3a5f;
+        color: var(--color-white);
+        padding: 3rem 2rem;
+        border-radius: var(--border-radius-lg);
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    .cta-section h2 {
+        margin-bottom: 0.5rem;
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 600;
+    }
+
+    .cta-section p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-buttons .btn-ibmec {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+        .home-container {
+            padding: 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+        }
+
+        .cta-buttons .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="hero {% if user_type %}logged-in{% endif %}">
+        <div class="content-wrapper">
+            <h1>Bem-vindo ao Sistema de Monitoria</h1>
+            <p>Conectando alunos e monitores para melhor aprendizado</p>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        {% if not user_type %}
+        <div class="cta-section">
+            <h2>Comece Agora!</h2>
+            <p>Faça parte do programa de monitoria da sua instituição</p>
+            <div class="cta-buttons">
+                <a href="{% url 'login' %}" class="btn-ibmec">Fazer Login</a>
+                <a href="{% url 'cadastro_aluno' %}" class="btn-ibmec">Cadastrar como Aluno</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="features">
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3 class="feature-title">Vagas Disponíveis</h3>
+            <p class="feature-description">Encontre vagas de monitoria em diversas disciplinas</p>
+            <a href="{% url 'lista_vagas' %}" class="btn-ibmec">Ver Vagas</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h3 class="feature-title">Gestão Simplificada</h3>
+            <p class="feature-description">Acompanhe candidaturas e gerencie monitores facilmente</p>
+            {% if user_type == 'coordenador' or user_type == 'casa' or user_type == 'professor' %}
+            <a href="{% url 'painel_coordenador' %}" class="btn-ibmec">Acessar</a>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn-ibmec">Acessar</a>
+            {% endif %}
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Relatórios Detalhados</h3>
+            <p class="feature-description">Visualize métricas e registros de atividades</p>
+            {% if user_type == 'coordenador' or user_type == 'casa' %}
+            <a href="{% url 'dashboard' %}" class="btn-ibmec">Ver Mais</a>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn-ibmec">Ver Mais</a>
+            {% endif %}
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">⏰</div>
+            <h3 class="feature-title">Presença de Alunos</h3>
+            <p class="feature-description">Registre e acompanhe a presença dos alunos nas monitorias</p>
+            {% if user_type == 'monitor' %}
+            <a href="{% url 'presenca_alunos' %}" class="btn-ibmec">Ver Mais</a>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn-ibmec">Ver Mais</a>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
