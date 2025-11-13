@@ -26,8 +26,31 @@ O projeto já está configurado com os arquivos necessários:
    - **Build Command**: `./render-build.sh`
    - **Start Command**: `cd src && gunicorn myproject.wsgi:application`
    - **Instance Type**: Free (ou pago para melhor performance)
+5. **NÃO clique em "Deploy Web Service" ainda!** Antes, configure as variáveis de ambiente (veja seção 4 abaixo)
 
-### 3. Configurar Banco de Dados PostgreSQL
+### 3. Configurar Variáveis de Ambiente (ANTES de fazer deploy)
+
+1. Na mesma tela de configuração, role até **"Environment Variables"**
+2. Clique em **"Add Environment Variable"** e adicione:
+   - `SECRET_KEY`: `odo2mjh)(8fyiua0p10)v0ab&)a9h%7ct40+mhc*l+&=qz6p9w`
+   - `DEBUG`: `False`
+   - `ALLOWED_HOSTS`: `.onrender.com`
+   - `PYTHON_VERSION`: `3.9.18`
+   - `DATABASE_URL`: (veja seção 4 para configurar o banco)
+
+3. Agora sim, clique em **"Deploy Web Service"**
+
+### 4. Configurar Banco de Dados PostgreSQL
+
+**Opção A: Usar Supabase (Recomendado - Já tem configurado)**
+
+1. O banco Supabase já está configurado no arquivo `env`
+2. Na seção de Environment Variables do Render, a `DATABASE_URL` já deve estar preenchida com:
+   ```
+   postgresql://postgres:ggwtZ6XYy1ksEvjr@db.zkonmdojdbmdptmeeinf.supabase.co:5432/postgres
+   ```
+
+**Opção B: Criar PostgreSQL no Render**
 
 1. No Render Dashboard, clique em **"New +"** → **"PostgreSQL"**
 2. Configure:
@@ -37,29 +60,16 @@ O projeto já está configurado com os arquivos necessários:
    - **Region**: Mesma do Web Service
 
 3. Após criar, copie a **Internal Database URL**
-
-### 4. Variáveis de Ambiente no Render
-
-No seu Web Service, vá em **Environment** e adicione:
-
-```
-DATABASE_URL=<Internal Database URL copiada>
-SECRET_KEY=<gere uma chave aleatória segura>
-DEBUG=False
-ALLOWED_HOSTS=.onrender.com
-PYTHON_VERSION=3.9.18
-```
-
-Para gerar SECRET_KEY segura:
-```python
-python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
-```
+4. Volte no Web Service → **Environment** → edite `DATABASE_URL` e cole a URL copiada
 
 ### 5. Deploy
 
-1. Clique em **"Manual Deploy"** → **"Deploy latest commit"**
-2. Aguarde o build completar (~2-5 minutos)
-3. Acesse a URL fornecida (ex: `https://monitoria-backend.onrender.com`)
+1. Se você já clicou em **"Deploy Web Service"**, o deploy iniciará automaticamente
+2. Se não clicou ainda, clique agora em **"Deploy Web Service"**
+3. Aguarde o build completar (~2-5 minutos)
+4. Acesse a URL fornecida (ex: `https://monitoria-backend.onrender.com`)
+
+**Nota**: O primeiro deploy pode demorar mais. Acompanhe o progresso na aba **Logs**.
 
 ---
 
